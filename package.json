@@ -1,6 +1,6 @@
 {
   "name": "@hasna/predictor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Swarm intelligence prediction engine — multi-agent simulation, persona generation, social dynamics, emergent behavior analysis",
   "type": "module",
   "bin": {
@@ -23,8 +23,8 @@
     "mcp": "bun run src/mcp/index.ts"
   },
   "publishConfig": {
-    "access": "restricted",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "dependencies": {
     "@hasna/researcher": "^0.1.0",
@@ -39,7 +39,7 @@
   "peerDependencies": {
     "typescript": "^5"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "author": "Andrei Hasna <andrei@hasna.com>",
   "keywords": [
     "predictor",
