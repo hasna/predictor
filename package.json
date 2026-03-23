@@ -1,6 +1,6 @@
 {
   "name": "@hasna/predictor",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Swarm intelligence prediction engine \u2014 multi-agent simulation, persona generation, social dynamics, emergent behavior analysis",
   "type": "module",
   "bin": {
