@@ -3,7 +3,7 @@
  * Uses bun:sqlite native API.
  */
 
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 
 export const SCHEMA_SQL = `
 -- ─── Simulations ─────────────────────────────────────────────────────────────
@@ -109,6 +109,18 @@ CREATE TABLE IF NOT EXISTS prediction_reports (
 );
 
 CREATE INDEX IF NOT EXISTS idx_prediction_reports_simulation ON prediction_reports(simulation_id);
+
+-- ─── Feedback ────────────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS feedback (
+  id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  message TEXT NOT NULL,
+  email TEXT,
+  category TEXT DEFAULT 'general',
+  version TEXT,
+  machine_id TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 
 -- ─── Schema version tracking ─────────────────────────────────────────────────
 

@@ -11,6 +11,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod"
 import {
   initDb,
+  getAdapter,
   getSimulation,
   listActions,
   listPersonas,
@@ -317,6 +318,29 @@ server.tool(
         type: "text" as const,
         text: `${limited.length} action(s)${actions.length > limited.length ? ` (showing ${limited.length} of ${actions.length})` : ""}:\n\n${lines.join("\n")}`,
       }],
+    }
+  },
+)
+
+// ─── Feedback ───────────────────────────────────────────────────────────────
+
+server.tool(
+  "send_feedback",
+  "Send feedback about this service",
+  {
+    message: z.string().describe("Feedback message"),
+    email: z.string().optional().describe("Contact email (optional)"),
+    category: z.enum(["bug", "feature", "general"]).optional().describe("Feedback category"),
+  },
+  async (params: { message: string; email?: string; category?: string }) => {
+    const adapter = getAdapter()
+    const pkg = require("../../package.json")
+    adapter.run(
+      "INSERT INTO feedback (message, email, category, version) VALUES (?, ?, ?, ?)",
+      params.message, params.email || null, params.category || "general", pkg.version
+    )
+    return {
+      content: [{ type: "text" as const, text: "Feedback saved. Thank you!" }],
     }
   },
 )

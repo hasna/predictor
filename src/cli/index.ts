@@ -9,6 +9,7 @@
 import { Command } from "commander"
 import {
   initDb,
+  getAdapter,
   getDefaultDbPath,
   getSimulation,
   listActions,
@@ -407,6 +408,23 @@ program
     } finally {
       db.close()
     }
+  })
+
+// ─── Feedback ───────────────────────────────────────────────────────────────
+
+program
+  .command("feedback <message>")
+  .description("Send feedback")
+  .option("--email <email>", "Contact email")
+  .option("--category <category>", "Category: bug, feature, general")
+  .action((message: string, opts: { email?: string; category?: string }) => {
+    const adapter = getAdapter()
+    const pkg = require("../../package.json")
+    adapter.run(
+      "INSERT INTO feedback (message, email, category, version) VALUES (?, ?, ?, ?)",
+      message, opts.email || null, opts.category || "general", pkg.version
+    )
+    console.log("Feedback saved. Thank you!")
   })
 
 program.parse()

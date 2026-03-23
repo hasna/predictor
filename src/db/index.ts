@@ -4,17 +4,19 @@
  */
 
 import { Database } from "bun:sqlite"
+import { SqliteAdapter } from "@hasna/cloud"
 import { existsSync, mkdirSync, cpSync } from "fs"
 import { SCHEMA_SQL, SCHEMA_VERSION } from "./schema.ts"
 
 let _db: Database | null = null
+let _adapter: SqliteAdapter | null = null
 
 export function getDb(dbPath?: string): Database {
   if (_db) return _db
   const path = dbPath ?? getDefaultDbPath()
-  _db = new Database(path, { create: true })
-  _db.run("PRAGMA journal_mode = WAL")
-  _db.run("PRAGMA foreign_keys = ON")
+  _adapter = new SqliteAdapter(path)
+  _db = _adapter.raw
+  // SqliteAdapter already sets WAL and foreign_keys; add busy_timeout
   _db.run("PRAGMA busy_timeout = 5000")
   return _db
 }
@@ -77,7 +79,16 @@ export function closeDb(): void {
   if (_db) {
     _db.close()
     _db = null
+    _adapter = null
   }
+}
+
+/** Get the SqliteAdapter for direct SQL queries (e.g. feedback). */
+export function getAdapter(): SqliteAdapter {
+  if (!_adapter) {
+    getDb() // force initialization
+  }
+  return _adapter!
 }
 
 // ─── Simulation queries ─────────────────────────────────────────────────────
