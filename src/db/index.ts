@@ -4,6 +4,7 @@
  */
 
 import { Database } from "bun:sqlite"
+import { existsSync, mkdirSync, cpSync } from "fs"
 import { SCHEMA_SQL, SCHEMA_VERSION } from "./schema.ts"
 
 let _db: Database | null = null
@@ -19,15 +20,31 @@ export function getDb(dbPath?: string): Database {
 }
 
 export function getDefaultDbPath(): string {
+  // Support env var overrides
+  const envPath = process.env.HASNA_PREDICTOR_DB_PATH ?? process.env.PREDICTOR_DB_PATH
+  if (envPath) return envPath
+
   const home = process.env.HOME ?? process.env.USERPROFILE ?? "."
-  const dir = `${home}/.predictor`
+  const newDir = `${home}/.hasna/predictor`
+  const oldDir = `${home}/.predictor`
+
+  // Auto-migrate from old location if new dir doesn't exist yet
+  if (!existsSync(newDir) && existsSync(oldDir)) {
+    try {
+      mkdirSync(`${home}/.hasna`, { recursive: true })
+      cpSync(oldDir, newDir, { recursive: true })
+    } catch {
+      // Fall through to create new dir
+    }
+  }
+
   // Ensure directory exists
   try {
-    require("fs").mkdirSync(dir, { recursive: true })
+    mkdirSync(newDir, { recursive: true })
   } catch {
     // already exists
   }
-  return `${dir}/predictor.db`
+  return `${newDir}/predictor.db`
 }
 
 export function initDb(dbPath?: string): Database {

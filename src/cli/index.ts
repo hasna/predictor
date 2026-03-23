@@ -35,7 +35,7 @@ program
   .description("Swarm intelligence prediction engine — multi-agent social media simulation")
   .version("0.0.1")
   .option("--json", "Output as JSON")
-  .option("--db <path>", "Database path (default: ~/.predictor/predictor.db)")
+  .option("--db <path>", "Database path (default: ~/.hasna/predictor/predictor.db)")
 
 function isJson(): boolean {
   return program.opts().json === true
