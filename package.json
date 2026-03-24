@@ -1,7 +1,7 @@
 {
   "name": "@hasna/predictor",
   "version": "0.0.6",
-  "description": "Swarm intelligence prediction engine \u2014 multi-agent simulation, persona generation, social dynamics, emergent behavior analysis",
+  "description": "Swarm intelligence prediction engine — multi-agent simulation, persona generation, social dynamics, emergent behavior analysis",
   "type": "module",
   "bin": {
     "predictor": "./src/cli/index.ts",
@@ -28,7 +28,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@hasna/cloud": "^0.1.0",
+    "@hasna/cloud": "0.1.5",
     "@hasna/researcher": "^0.1.0",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "commander": "^13.1.0",
