@@ -28,7 +28,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@hasna/cloud": "0.1.5",
+    "@hasna/cloud": "^0.1.24",
     "@hasna/researcher": "^0.1.0",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "commander": "^13.1.0",
